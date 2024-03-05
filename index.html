@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Franz Enzenhofers Copy and Fetch + ChatGPT Bookmarklet</title>
+<link rel="icon" href="https://copy-and-fetch.franzai.com/image.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://copy-and-fetch.franzai.com/">
+<meta property="og:title" content="Franz Enzenhofers Copy and Fetch + ChatGPT Bookmarklet">
+<meta property="og:description" content="A bookmarklet to share the content in your selection + the URL is is places on with the custom ChatGPT. The custom GPT will then fetch the content of the URL for additional context.">
+<meta property="og:image" content="https://copy-and-fetch.franzai.com/image.png">
+
+<!-- Meta description -->
+<meta name="description" content="A bookmarklet to share the content in your selection + the URL is is places on with the custom ChatGPT. The custom GPT will then fetch the content of the URL for additional context.">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="https://copy-and-fetch.franzai.com/" />
+
+</head>
+<style>
+body {
+  font-family: Verdana, Geneva, sans-serif;
+  margin: 0;
+  padding: 20px;
+  color: #828282;
+  background-color: #f6f6ef;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+header {
+  padding: 20px 0;
+  text-align: center;
+}
+section {
+  margin-bottom: 20px;
+}
+h1, h2 {
+  color: #3c4043;
+}
+pre {
+  background-color: #f6f6ef;
+  padding: 15px;
+  color: #828282;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow-x: auto; /* Scroll horizontally if needed */
+  white-space: pre-wrap; /* Preserve whitespace */
+  max-width: 100%; /* Prevent spilling out of the container */
+}
+
+/* Common style for all button-like elements */
+.button-style {
+  display: inline-block;
+  background-color: #ff6600;
+  color: #fff;
+  padding: 10px 20px;
+  margin: 10px 0;
+  text-decoration: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease;
+  cursor: pointer; /* Ensure it looks clickable */
+  text-align: center; /* Center the text inside */
+  border: none; /* Remove border */
+}
+
+.button-style:hover {
+  background-color: #e55d00;
+}
+
+.instruction {
+  background-color: #f6f6ef;
+  border-left: 6px solid #ff6600;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: #828282;
+}
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  .instruction {
+    padding: 10px;
+  }
+}
+
+/* New styles for the form */
+#test-form {
+  background-color: #f6f6ef;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+#test-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#test-form input[type="text"], #test-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+/* New styles for the test result and links */
+#test-result {
+  word-wrap: break-word; /* Break the text at the end of the line */
+  overflow-wrap: break-word; /* Break long words if necessary */
+  white-space: pre-wrap; /* Preserve spaces and line breaks */
+}
+
+#test-result a {
+  color: #ff6600;
+}
+
+a {
+  text-decoration: underline; /* Underline all links */
+}
+
+  </style>
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Franz Enzenhofers Copy and Fetch + ChatGPT Bookmarklet</h1>
+    <p>A bookmarklet to share the content in your selection + the URL is is places on with the custom ChatGPT.</p>
+    <p>The custom GPT will then fetch the content of the URL for additional context.</p>
+    <center><a href="#installation" class="button-style">Installation</a></center>
+  </header>
+
+  <section id="use-cases">
+    <h2>Use Cases</h2>
+    <ul>
+      <li><strong>Fact Checking:</strong> Use it to quickly send a piece of information to ChatGPT for fact checking.</li>
+      <li><strong>Data Visualization:</strong> Send a URL of a data source to ChatGPT and ask it to generate a visualization.</li>
+      <li><strong>Python Code Execution:</strong> If you have a piece of Python code selected, you can send it to ChatGPT to execute and discuss the results.</li>
+      <li><strong>Content Summarization:</strong> Send a long article or report URL to ChatGPT and ask it to summarize the content.</li>
+      <li><strong>Language Translation:</strong> Send a selection of text in a foreign language to ChatGPT and ask it to translate it to your preferred language.</li>
+      <li><strong>Whatever you can think of:</strong> The limits of AI are not clear yet.</li>
+    </ul>
+  </section>
+
+  <section id="installation">
+    <h2>Manual Installation Guide</h2>
+    <ol>
+      <li>Right-click on your bookmarks bar and select "Add Page" or "Add Bookmark".</li>
+      <li>In the form that appears, set the name as "Copy and Fetch" or any name you prefer.</li>
+      <li>Copy the following code and paste it into the URL field:</li>
+      <div id="code-container">
+        <pre id="code">javascript:(function()%7Btry%7Bvar selection = window.getSelection ? window.getSelection().toString().trim() : %27%27;var currentUrl = window.location.href || %27URL unavailable%27;var message = selection || `Fetch content from ${currentUrl} for context. Please wait for further instructions.`;var baseMessage = `I copied this content:%5Cn%5Cn>>>%5Cn${message}%5Cn>>>%5Cn%5CnFrom this URL: ${currentUrl}%5CnFetch this URL for more context.%5Cn%5CnPlease wait for further instructions.`;var encodedMessage = encodeURIComponent(baseMessage);var targetUrl = `https://chat.openai.com/g/g-soMXGp85o-franz-enzenhofers-copy-and-fetch/?q=${encodedMessage}`;var newTab = window.open(targetUrl, %27_blank%27);if (!newTab) %7Bthrow new Error(%27Failed to open a new tab. Please check if pop-up blockers are enabled and try again.%27);%7D%7Dcatch (error)%7Bconsole.error(%27Bookmarklet Error:%27, error.message);alert(%27An error occurred while executing the bookmarklet. Please check the console for more details.%27);%7D%7D)();</pre>
+        <button id="copy-button" class="button-style">Copy</button>
+      </div>
+      <li>Save the bookmark. Now, whenever you're on a page you want to analyze, click the bookmark. A new tab will open with the analysis.</li>
+    </ol>
+  </section>
+
+  <script>
+  document.getElementById('copy-button').addEventListener('click', function() {
+    var code = document.getElementById('code').innerText;
+    var textarea = document.createElement('textarea');
+    textarea.textContent = code;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    alert('Code copied to clipboard!');
+  });
+  </script>
+
+
+<section id="drag-and-drop">
+  <h2>Drag and Drop Installation</h2>
+  <p>For a quick and easy installation, you can simply drag the following link to your bookmarks bar:</p>
+  <p><center><a  class="button-style" href="javascript:(function()%7Btry%7Bvar selection = window.getSelection ? window.getSelection().toString().trim() : %27%27;var currentUrl = window.location.href || %27URL unavailable%27;var message = selection || `Fetch content from ${currentUrl} for context. Please wait for further instructions.`;var baseMessage = `I copied this content:%5Cn%5Cn>>>%5Cn${message}%5Cn>>>%5Cn%5CnFrom this URL: ${currentUrl}%5CnFetch this URL for more context.%5Cn%5CnPlease wait for further instructions.`;var encodedMessage = encodeURIComponent(baseMessage);var targetUrl = `https://chat.openai.com/g/g-soMXGp85o-franz-enzenhofers-copy-and-fetch/?q=${encodedMessage}`;var newTab = window.open(targetUrl, %27_blank%27);if (!newTab) %7Bthrow new Error(%27Failed to open a new tab. Please check if pop-up blockers are enabled and try again.%27);%7D%7Dcatch (error)%7Bconsole.error(%27Bookmarklet Error:%27, error.message);alert(%27An error occurred while executing the bookmarklet. Please check the console for more details.%27);%7D%7D)();" class="bookmarklet-link" onclick="alert('Please drag this button to your bookmarks bar, do not click it.'); return false;">Copy and Fetch</a></center></p>
+  <p>If the above method doesn't work, follow the <a href="#installation">manual installation guide</a>.</p>
+</section>
+
+<section id="test-bookmarklet">
+  <h2>Test the Bookmarklet</h2>
+  <p>Enter a URL and selection text to simulate the bookmarklet:</p>
+  <form id="test-form">
+    <label for="test-url">URL:</label><br>
+    <input type="text" id="test-url" name="test-url" value="https://www.w3.org/Provider/Style/URI"><br>
+    <label for="test-selection">Selection Text:</label><br>
+    <textarea id="test-selection" name="test-selection" rows="4" cols="50">
+"What makes a cool URI?
+A cool URI is one which does not change.
+What sorts of URI change?
+URIs don't change: people change them."
+    </textarea><br>
+    <input type="submit" value="Test Bookmarklet"  class="button-style">
+  </form>
+  <p id="test-result"></p>
+</section>
+
+<script>
+document.getElementById('test-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  var url = document.getElementById('test-url').value;
+  var selection = document.getElementById('test-selection').value;
+  var message = selection || `Fetch content from ${url} for context.`;
+  var baseMessage = `I copied this content:\n\n>>>\n${message}\n>>>\n\nFrom this URL: ${url}\nFetch this URL for more context.\n\nPlease wait for further instructions.`;
+  var encodedMessage = encodeURIComponent(baseMessage);
+  var targetUrl = `https://chat.openai.com/g/g-soMXGp85o-franz-enzenhofers-copy-and-fetch/?q=${encodedMessage}`;
+  document.getElementById('test-result').innerHTML = 'The bookmarklet would open this URL: <a href="' + targetUrl + '" target="_blank">' + targetUrl + '</a>';
+});
+</script>
+
+
+  <section id="commented-code">
+    <h2>Bookmarklet Code Explained</h2>
+    <pre>
+// Immediately Invoked Function Expression (IIFE) for encapsulation. 
+(function() {
+  try {
+    // Get selected text or fallback to empty string
+    var selection = window.getSelection ? window.getSelection().toString().trim() : '';
+
+    // Get current URL or fallback to 'URL unavailable'
+    var currentUrl = window.location.href || 'URL unavailable';
+
+    // Create message from selection or URL
+    var message = selection || `Fetch content from ${currentUrl} for context.`;
+
+    // Format base message with content and URL
+    var baseMessage = `I copied this content:\n\n>>>\n${message}\n>>>\n\nFrom this URL: ${currentUrl}\nFetch this URL for more context.\n\nPlease wait for further instructions.`;
+
+    // Encode message for URL parameter
+    var encodedMessage = encodeURIComponent(baseMessage);
+
+    // Construct target URL with encoded message
+    var targetUrl = `https://chat.openai.com/g/g-soMXGp85o-franz-enzenhofers-copy-and-fetch/?q=${encodedMessage}`;
+
+    // Open new tab with target URL
+    var newTab = window.open(targetUrl, '_blank');
+
+    // Throw error if new tab couldn't be opened
+    if (!newTab) throw new Error('Failed to open a new tab. Check pop-up blockers.');
+  } catch (error) {
+    // Log error and alert user
+    console.error('Bookmarklet Error:', error.message);
+    alert('An error occurred. Check the console for details.');
+  }
+})();
+    </pre>
+  </section>
+
+  <section id="usage">
+    <h2>How to Use</h2>
+    <p class="instruction">Navigate to any web page → Select any text → Click the "Copy and Fetch" bookmark → A new tab opens with ChatGPT → Wait 5 seconds and the selected content and URL will be pre-filled into ChatGPT!</p>
+  </section>
+
+</div>
+</body>
+</html>
